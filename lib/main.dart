@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fundi/screens/pages/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade400),
       ),
-      home: ,
+      initialRoute: '/',
+      routes: {'/': (context) =>  LogIn()},
     );
   }
 }
-
-
