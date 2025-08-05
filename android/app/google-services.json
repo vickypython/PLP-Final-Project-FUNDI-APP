@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "437016783577",
+    "project_id": "fundi-10cec",
+    "storage_bucket": "fundi-10cec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437016783577:android:2a3a91dfb3b440af09acc8",
+        "android_client_info": {
+          "package_name": "com.example.fundi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd-XZ5BhG9Hfv16a90CxnMsBTJrj59k_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

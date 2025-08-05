@@ -1,7 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fundi/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:fundi/screens/pages/login.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    options:DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade400),
       ),
       initialRoute: '/',
-      routes: {'/': (context) =>  LogIn()},
+      routes: {'/': (context) => LogIn()},
     );
   }
 }

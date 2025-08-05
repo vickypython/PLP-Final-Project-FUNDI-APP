@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "fundi-10cec",
+          "configurations": {
+            "android": "1:437016783577:android:2a3a91dfb3b440af09acc8",
+            "web": "1:437016783577:web:5da835efaf75c4a609acc8"
+          }
+        }
+      },
+      "android": {
+        "default": {
+          "projectId": "fundi-10cec",
+          "appId": "1:437016783577:android:2a3a91dfb3b440af09acc8",
+          "fileOutput": "android/app/google-services.json"
+        }
+      }
+    }
+  }
+}
