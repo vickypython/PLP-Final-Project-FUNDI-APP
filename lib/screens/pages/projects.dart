@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fundi/screens/pages/edit_project.dart';
 
 class ShowProjects extends StatelessWidget {
   const ShowProjects({super.key});
@@ -131,10 +132,12 @@ class ShowProjects extends StatelessWidget {
                               icon: const Icon(Icons.edit, color: Colors.blue),
                               label: const Text("Edit", style: TextStyle(color: Colors.blue)),
                               onPressed: () {
-                                Navigator.pushNamed(
+                                Navigator.push(
                                   context,
-                                  '/editProject',
-                                  arguments: doc.id,
+                                  MaterialPageRoute(builder: (context)=> EditProjectScreen(
+                                    projectData:data ,
+                                    projectId: doc.id,
+                                    ))
                                 );
                               },
                             ),
