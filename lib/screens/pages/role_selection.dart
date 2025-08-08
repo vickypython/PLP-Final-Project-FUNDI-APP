@@ -1,63 +1,52 @@
+import 'package:flutter/material.dart';
+import 'profile_setup.dart';
+import 'fundi_profile.dart';
+
 class RoleSelectionScreen extends StatelessWidget {
+  const RoleSelectionScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final themeColor = Colors.blue.shade900;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade200,
-        title: Text("Choose Your Role"),
+        title: const Text("Choose Your Role"),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "How do you want to use the app?",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: const Icon(Icons.person, size: 28),
+              label: const Text("Continue as User"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: themeColor,
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
-              onPressed: () => _saveRole(context, "client"),
-              child: Text("I want to hire (Client)"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileSetup()),
+                );
+              },
             ),
-            const SizedBox(height: 15),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.build, size: 28),
+              label: const Text("Continue as Fundi"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange.shade700,
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
-              onPressed: () => _saveRole(context, "fundi"),
-              child: Text("I want to work (Fundi)"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FundiProfileSetup()),
+                );
+              },
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _saveRole(BuildContext context, String role) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
-        "role": role,
-      }, SetOptions(merge: true));
-
-      if (role == "client") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => ProfileSetup()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => FundiProfileSetup()),
-        );
-      }
-    }
   }
 }

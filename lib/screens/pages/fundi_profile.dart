@@ -1,3 +1,10 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fundi/screens/home_page.dart';
+import 'package:image_picker/image_picker.dart';
 class FundiProfileSetup extends StatefulWidget {
   const FundiProfileSetup({super.key});
 
