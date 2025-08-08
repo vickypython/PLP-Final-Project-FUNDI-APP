@@ -1,11 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ShowProjects extends StatelessWidget {
   const ShowProjects({super.key});
 
+  Future<void> _deleteProject(BuildContext context, String projectId) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Project"),
+        content: const Text("Are you sure you want to delete this project?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Cancel")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text("Delete"),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await FirebaseFirestore.instance.collection('projects').doc(projectId).delete();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Available Projects"),
@@ -32,7 +57,8 @@ class ShowProjects extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             itemCount: projects.length,
             itemBuilder: (context, index) {
-              final data = projects[index].data() as Map<String, dynamic>;
+              final doc = projects[index];
+              final data = doc.data() as Map<String, dynamic>;
 
               return Card(
                 shape: RoundedRectangleBorder(
@@ -81,12 +107,10 @@ class ShowProjects extends StatelessWidget {
                             label: Text("Budget: ${data['budget'] ?? ''}"),
                             backgroundColor: Colors.green.shade100,
                           ),
-                          
                           Chip(
                             label: Text("Timeline: ${data['timeline'] ?? ''}"),
                             backgroundColor: Colors.orange.shade100,
                           ),
-                          
                           Chip(
                             label: Text("Urgency: ${data['urgency'] ?? ''}"),
                             backgroundColor: Colors.red.shade100,
@@ -97,6 +121,33 @@ class ShowProjects extends StatelessWidget {
                           ),
                         ],
                       ),
+
+                      // Edit/Delete for owner
+                      if (currentUser != null && currentUser.uid == data['ownerId'])
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              label: const Text("Edit", style: TextStyle(color: Colors.blue)),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/editProject',
+                                  arguments: doc.id,
+                                );
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                            TextButton.icon(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              label: const Text("Delete", style: TextStyle(color: Colors.red)),
+                              onPressed: () {
+                                _deleteProject(context, doc.id);
+                              },
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
