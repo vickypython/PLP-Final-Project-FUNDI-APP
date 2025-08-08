@@ -81,10 +81,12 @@ class ShowProjects extends StatelessWidget {
                             label: Text("Budget: ${data['budget'] ?? ''}"),
                             backgroundColor: Colors.green.shade100,
                           ),
+                          
                           Chip(
                             label: Text("Timeline: ${data['timeline'] ?? ''}"),
                             backgroundColor: Colors.orange.shade100,
                           ),
+                          
                           Chip(
                             label: Text("Urgency: ${data['urgency'] ?? ''}"),
                             backgroundColor: Colors.red.shade100,

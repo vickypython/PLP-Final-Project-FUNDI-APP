@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fundi/screens/home_page.dart';
 
@@ -38,6 +39,8 @@ class _PostProjectState extends State<PostProject> {
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       try {
+        final currentUser = FirebaseAuth.instance.currentUser;
+
         await FirebaseFirestore.instance.collection('projects').add({
           'title': _projectTitleController.text.trim(),
           'description': _descriptionController.text.trim(),
@@ -46,6 +49,7 @@ class _PostProjectState extends State<PostProject> {
           'location': _locationController.text.trim(),
           'urgency': _selectedUrgency,
           'category': _selectedCategory,
+          'ownerId': currentUser?.uid, // save ownerId
           'createdAt': FieldValue.serverTimestamp(),
         });
 

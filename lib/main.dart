@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fundi/screens/pages/login.dart';
 import 'package:fundi/screens/pages/post_project.dart';
 import 'package:fundi/screens/pages/profile_setup.dart';
+import 'package:fundi/screens/pages/projects.dart';
 import 'package:fundi/screens/pages/signup.dart';
 
 void main() async {
@@ -22,12 +23,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade400),
       ),
-      initialRoute: '/register',
+      initialRoute: '/view/projects',
       routes: {
         '/': (context) => LogIn(),
         '/register':(context)=>Signup(),
         '/project': (context) => PostProject(),
         '/profile': (context) => ProfileSetup(),
+        '/view/projects':(_)=>ShowProjects()
       },
     );
   }
