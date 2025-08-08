@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fundi/screens/home_page.dart';
 
@@ -5,257 +6,228 @@ class PostProject extends StatefulWidget {
   const PostProject({super.key});
 
   @override
-  _PostProjectState createState() => _PostProjectState();
+  State<PostProject> createState() => _PostProjectState();
 }
 
 class _PostProjectState extends State<PostProject> {
   final _formKey = GlobalKey<FormState>();
 
-  var _projecttitleController;
+  final TextEditingController _projectTitleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _timelineController = TextEditingController();
+  final TextEditingController _budgetController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
-  var _descriptionController;
-
-  var _timelineController;
-
-  var _budgetController;
-
-  var _locationController;
   final List<String> urgencies = [
-    'low priority',
-    'Medium priority',
-    'High priority',
+    'Low Priority',
+    'Medium Priority',
+    'High Priority',
   ];
+
   final List<String> categories = [
-    'Selected category',
-    'Masonary and Foundation',
+    'Masonry and Foundation',
     'Plumbing',
     'Interior Finishing',
-    'Electrial Work'
-        'Roofing and carpentry',
+    'Electrical Work',
+    'Roofing and Carpentry',
   ];
-  String? _selectedurgency = "low priority";
-  String? _selectedcategory = "Selected category";
+
+  String? _selectedUrgency;
+  String? _selectedCategory;
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await FirebaseFirestore.instance.collection('projects').add({
+          'title': _projectTitleController.text.trim(),
+          'description': _descriptionController.text.trim(),
+          'budget': _budgetController.text.trim(),
+          'timeline': _timelineController.text.trim(),
+          'location': _locationController.text.trim(),
+          'urgency': _selectedUrgency,
+          'category': _selectedCategory,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Project posted successfully')),
+        );
+
+        _formKey.currentState!.reset();
+        
+
+        setState(() {
+          _projectTitleController.clear();
+        _descriptionController.clear();
+        _budgetController.clear();
+        _timelineController.clear();
+        _locationController.clear();
+          _selectedUrgency = null;
+          _selectedCategory = null;
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error posting project: $e')));
+      }
+    }
+  }
+
+  InputDecoration _inputDecoration(String label, String hint) {
+    return InputDecoration(
+      labelText: label,
+      hintText: hint,
+      filled: true,
+      fillColor: Colors.grey.shade100,
+      labelStyle: const TextStyle(color: Colors.black87),
+      hintStyle: const TextStyle(color: Colors.black45),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.blue.shade200),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Post New Project"),
         backgroundColor: Colors.blue.shade200,
         elevation: 0,
-        title: const Text(
-          "Post New Project ",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.close),
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
+                MaterialPageRoute(builder: (_) => const HomePage()),
               );
             },
-            icon: const Icon(Icons.close),
           ),
         ],
-        centerTitle: false,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  controller: _projecttitleController,
-                  style: const TextStyle(color: Colors.black87),
-                  decoration: InputDecoration(
-                    labelText: 'Project Title*',
-                    hintText: 'e.g.,3-Bedroom House Construction',
-                    labelStyle: const TextStyle(color: Colors.white38),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue.shade200),
-                    ),
-                  ),
-                  keyboardType: TextInputType.name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "please enter your cateqory";
-                    }
-                    return null;
-                  },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _projectTitleController,
+                decoration: _inputDecoration(
+                  'Project Title*',
+                  'e.g., 3-Bedroom House',
                 ),
-                const SizedBox(height: 12),
-                //there is field for cateqory here
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: "Category*",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(11),
-                    ),
-                  ),
-                  value: _selectedcategory,
-                  items: categories.map((String category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedcategory = value!;
-                    });
-                  },
-                  validator: (value) => value == null || value.isEmpty
-                      ? "Please enter category"
-                      : null,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter the project title'
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                decoration: _inputDecoration('Category*', 'Select category'),
+                value: _selectedCategory,
+                items: categories.map((cat) {
+                  return DropdownMenuItem(value: cat, child: Text(cat));
+                }).toList(),
+                onChanged: (val) => setState(() => _selectedCategory = val),
+                validator: (value) =>
+                    value == null ? 'Please select a category' : null,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                maxLines: 4,
+                decoration: _inputDecoration(
+                  'Description*',
+                  'Describe your project...',
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _descriptionController,
-                  style: const TextStyle(color: Colors.black87),
-                  decoration: InputDecoration(
-                    labelText: "Description*",
-                    hintText:
-                        'Describe your project requirements material needed and any specific details...',
-                    labelStyle: const TextStyle(color: Colors.white38),
-                    hintMaxLines: 5,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue.shade200),
-                    ),
-                  ),
-                  keyboardType: TextInputType.name,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "please enter the project description";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextFormField(
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please enter a description'
+                    : null,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
                       controller: _budgetController,
-                      style: const TextStyle(color: Colors.black87),
-                      decoration: InputDecoration(
-                        labelText: 'Budget Range*',
-                        hintText: 'e.g.,KSH 100,000-2,000,000',
-                        labelStyle: TextStyle(color: Colors.white38),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue.shade200),
-                        ),
+                      decoration: _inputDecoration(
+                        'Budget Range*',
+                        'e.g., KSH 100,000',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter your Budget range";
-                        }
-
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _timelineController,
-                      style: const TextStyle(color: Colors.black87),
-                      decoration: InputDecoration(
-                        labelText: 'Timeline',
-                        hintText: 'e.g.,2-3 weeks',
-                        labelStyle: TextStyle(color: Colors.white38),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue.shade200),
-                        ),
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter your timeline";
-                        }
-
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextFormField(
-                      controller: _locationController,
-                      style: const TextStyle(color: Colors.black87),
-                      decoration: InputDecoration(
-                        labelText: 'Location',
-                        hintText: 'e.g,Nairobi',
-                        labelStyle: const TextStyle(color: Colors.white38),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue.shade200),
-                        ),
-                      ),
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please enter your location";
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(width: 12),
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: "Urgency",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                        ),
-                      ),
-                      value: _selectedurgency,
-                      items: urgencies.map((String urgency) {
-                        return DropdownMenuItem<String>(
-                          value: urgency,
-                          child: Text(urgency),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedurgency = value!;
-                        });
-                      },
                       validator: (value) => value == null || value.isEmpty
-                          ? "Please enter urgency"
+                          ? 'Enter budget range'
                           : null,
                     ),
-                  ],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _timelineController,
+                      decoration: _inputDecoration(
+                        'Timeline*',
+                        'e.g., 2-3 weeks',
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Enter timeline'
+                          : null,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _locationController,
+                      decoration: _inputDecoration(
+                        'Location*',
+                        'e.g., Nairobi',
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Enter your location'
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      decoration: _inputDecoration(
+                        'Urgency*',
+                        'Select urgency',
+                      ),
+                      value: _selectedUrgency,
+                      items: urgencies.map((urg) {
+                        return DropdownMenuItem(value: urg, child: Text(urg));
+                      }).toList(),
+                      onChanged: (val) =>
+                          setState(() => _selectedUrgency = val),
+                      validator: (value) =>
+                          value == null ? 'Please select urgency' : null,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.blueAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ],
-            ),
+                child: const Text(
+                  'Post Project',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
           ),
         ),
       ),

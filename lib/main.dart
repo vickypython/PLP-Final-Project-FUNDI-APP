@@ -2,10 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fundi/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:fundi/screens/pages/login.dart';
+import 'package:fundi/screens/pages/post_project.dart';
+import 'package:fundi/screens/pages/profile_setup.dart';
+import 'package:fundi/screens/pages/signup.dart';
 
 void main() async {
-  await Firebase.initializeApp(
-    options:DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -20,8 +22,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade400),
       ),
-      initialRoute: '/',
-      routes: {'/': (context) => LogIn()},
+      initialRoute: '/register',
+      routes: {
+        '/': (context) => LogIn(),
+        '/register':(context)=>Signup(),
+        '/project': (context) => PostProject(),
+        '/profile': (context) => ProfileSetup(),
+      },
     );
   }
 }
