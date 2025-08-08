@@ -54,14 +54,13 @@ class _PostProjectState extends State<PostProject> {
         );
 
         _formKey.currentState!.reset();
-        
 
         setState(() {
           _projectTitleController.clear();
-        _descriptionController.clear();
-        _budgetController.clear();
-        _timelineController.clear();
-        _locationController.clear();
+          _descriptionController.clear();
+          _budgetController.clear();
+          _timelineController.clear();
+          _locationController.clear();
           _selectedUrgency = null;
           _selectedCategory = null;
         });
