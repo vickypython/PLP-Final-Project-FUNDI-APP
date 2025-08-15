@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fundi/firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:fundi/screens/pages/fundis.dart';
-import 'package:fundi/screens/pages/login.dart';
-import 'package:fundi/screens/pages/post_project.dart';
-import 'package:fundi/screens/pages/profile_setup.dart';
-import 'package:fundi/screens/pages/projects.dart';
-import 'package:fundi/screens/pages/role_selection.dart';
-import 'package:fundi/screens/pages/signup.dart';
+import 'package:fundi/screens/home_page.dart';
+import 'package:fundi/screens/onboarding/login.dart';
+import 'package:fundi/screens/onboarding/role_selection.dart';
+import 'package:fundi/screens/onboarding/signup.dart';
+import 'package:fundi/screens/splash_screen.dart';
 
 void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -17,23 +15,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Fundi App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue.shade400),
-      ),
-      initialRoute: '/fundis',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/splash',
       routes: {
-        '/': (context) => LogIn(),
-        '/register':(context)=>Signup(),
-        '/project': (context) => PostProject(),
-        '/profile': (context) => ProfileSetup(),
-        '/view/projects':(_)=>ShowProjects(),
-        '/roleselection':(context)=>RoleSelectionScreen(),
-        '/fundis':(context)=>FundiListScreen()
+        '/splash': (context) => SplashScreen(),
+        '/login': (context) => const LogIn(),
+        '/register': (context) => const Signup(),
+        '/roleSelection': (context) => const RoleSelectionScreen(),
+        '/home': (context) => const HomeScreen(),
       },
     );
   }
