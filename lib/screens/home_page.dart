@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'user_profile.dart';
-import 'fundi_profile.dart';
-import 'project_post.dart';
-import 'project_card.dart';
-import 'fundi_card.dart';
+import 'package:fundi/screens/pages/post_project.dart';
+import 'package:fundi/screens/pages/projects.dart';
+import 'package:fundi/screens/pages/fundis.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,11 +14,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    UserProfile(),
-    FundiProfile(),
-    ProjectPost(),
-    ProjectCard(),
-    FundiCard(),
+    FundiListScreen(),
+    PostProject(),
+    ShowProjects()
+  
   ];
 
   void _onItemTapped(int index) {
@@ -37,8 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'User'),
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Fundi'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Post'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Projects'),
           BottomNavigationBarItem(icon: Icon(Icons.handyman), label: 'Fundis'),
@@ -47,4 +42,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

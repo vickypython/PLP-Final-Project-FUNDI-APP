@@ -98,15 +98,15 @@ class _ProfileSetupState extends State<ProfileSetup> {
               tooltip: _isEditMode ? 'View Mode' : 'Edit Mode',
               onPressed: () => setState(() => _isEditMode = !_isEditMode),
             ),
-          // IconButton(
-          //   onPressed: () {
-          //     Navigator.pushReplacement(
-          //       context,
-          //       MaterialPageRoute(builder: (_) => const HomePage()),
-          //     );
-          //   },
-          //   icon: const Icon(Icons.close),
-          // ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+              );
+            },
+            icon: const Icon(Icons.close),
+          ),
         ],
       ),
       body: _isLoading
@@ -201,7 +201,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                   onPressed: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (_) => const HomePage()),
+                                      MaterialPageRoute(builder: (_) => const HomeScreen()),
                                     );
                                   },
                                   child: const Text(
@@ -298,7 +298,14 @@ class _ProfileSetupState extends State<ProfileSetup> {
             "location": _locationController.text.trim(),
             "bio": _bioController.text.trim(),
           });
-
+    setState(() {
+          _fullnameController.clear();
+          _emailController.clear();
+           _phonenumberController.clear();
+          _locationController.clear();
+          _bioController.clear();
+         
+        });
         
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -306,6 +313,10 @@ class _ProfileSetupState extends State<ProfileSetup> {
                     _isEditMode ? "Profile updated successfully" : "Profile created"),
               ),
             );
+            Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HomeScreen()),
+        );
            
         }
       } catch (e) {

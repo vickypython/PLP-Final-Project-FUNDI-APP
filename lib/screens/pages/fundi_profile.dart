@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,7 +53,7 @@ class _FundiProfileSetupState extends State<FundiProfileSetup> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => HomePage()),
+          MaterialPageRoute(builder: (_) => HomeScreen()),
         );
       }
     }

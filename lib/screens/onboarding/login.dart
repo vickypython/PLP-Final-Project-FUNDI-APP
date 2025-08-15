@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fundi/screens/home_page.dart';
-import 'package:fundi/screens/pages/profile_setup.dart';
+import 'package:fundi/screens/onboarding/role_selection.dart';
 import 'package:fundi/screens/onboarding/signup.dart';
 
 class LogIn extends StatefulWidget {
@@ -33,7 +32,7 @@ class _LogInState extends State<LogIn> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
       );
     } on FirebaseAuthException catch (e) {
       String errorMessage;
@@ -123,12 +122,7 @@ class _LogInState extends State<LogIn> {
                 _isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
-                        onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProfileSetup()),
-                    );
-                  },
+                        onPressed:()=>_login(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orangeAccent,
                           shape: RoundedRectangleBorder(

@@ -59,7 +59,7 @@ class FundiCard extends StatelessWidget {
               radius: 35,
               backgroundImage: fundi['profileImage'] != null
                   ? NetworkImage(fundi['profileImage'])
-                  : const AssetImage('assets/images/default_avatar.png')
+                  : const AssetImage('assets/images/default1.jpg')
                         as ImageProvider,
             ),
             const SizedBox(width: 15),
